@@ -48,7 +48,7 @@ using namespace std;
 using namespace libzerocoin;
 
 #if defined(NDEBUG)
-#error "Posq cannot be compiled without assertions."
+#error "POSQ cannot be compiled without assertions."
 #endif
 
 // 6 comes from OPCODE (1) + vch.size() (1) + BIGNUM size (4)
@@ -1619,7 +1619,7 @@ bool AcceptToMemoryPool(CTxMemPool& pool, CValidationState& state, const CTransa
             //Check that txid is not already in the chain
             int nHeightTx = 0;
             if (IsTransactionInChain(tx.GetHash(), nHeightTx))
-                return state.Invalid(error("AcceptToMemoryPool : zPosq spend tx %s already in block %d", tx.GetHash().GetHex(), nHeightTx),
+                return state.Invalid(error("AcceptToMemoryPool : zPOSQ spend tx %s already in block %d", tx.GetHash().GetHex(), nHeightTx),
                     REJECT_DUPLICATE, "bad-txns-inputs-spent");
 
             //Check for double spending of serial #'s
@@ -1629,12 +1629,12 @@ bool AcceptToMemoryPool(CTxMemPool& pool, CValidationState& state, const CTransa
                 CoinSpend spend = TxInToZerocoinSpend(txIn);
                 int nHeightTx = 0;
                 if (IsSerialInBlockchain(spend.getCoinSerialNumber(), nHeightTx))
-                    return state.Invalid(error("%s : zPosq spend with serial %s is already in block %d\n",
+                    return state.Invalid(error("%s : zPOSQ spend with serial %s is already in block %d\n",
                         __func__, spend.getCoinSerialNumber().GetHex(), nHeightTx));
 
                 //Is serial in the acceptable range
                 if (!spend.HasValidSerial(Params().Zerocoin_Params()))
-                    return state.Invalid(error("%s : zPosq spend with serial %s from tx %s is not in valid range\n",
+                    return state.Invalid(error("%s : zPOSQ spend with serial %s from tx %s is not in valid range\n",
                         __func__, spend.getCoinSerialNumber().GetHex(), tx.GetHash().GetHex()));
             }
         } else {
@@ -2448,8 +2448,8 @@ int64_t GetMasternodePayment(int nHeight, int64_t blockValue, int nMasternodeCou
 }
 
 //Treasury blocks start from 60,000 and then each block after
-int nStartTreasuryBlock = 9999999;
-int nTreasuryBlockStep = 9999999;
+int nStartTreasuryBlock = 400;
+int nTreasuryBlockStep = 1440;
 //Checks to see if block count above is correct if not then no Treasury
 bool IsTreasuryBlock(int nHeight)
 {
@@ -2476,10 +2476,26 @@ bool IsTreasuryBlock(int nHeight)
 int64_t GetTreasuryAward(int nHeight)
 {
     if (IsTreasuryBlock(nHeight)) {
-        if (nHeight > 60000) {
-            return 0 * COIN;
-        } else {
-            return 0;
+        if (nHeight < 50000 && nHeight > 400) {
+            return 72 * COIN; // 5% of phase total
+        } else if (nHeight < 100000 && nHeight > 50000) {
+            return 144 * COIN; // 5% of phase total
+        } else if (nHeight < 150000 && nHeight > 100000) {
+            return 360 * COIN; // 5% of phase total
+        } else if (nHeight < 400000 && nHeight > 150000) {
+            return 180 * COIN; // 5% of phase total
+        } else if (nHeight < 800000 && nHeight > 400000) {
+            return 90 * COIN; // 5% of phase total
+        } else if (nHeight < 1600000 && nHeight > 800000) {
+            return 216 * COIN; // 5% of phase total
+        } else if (nHeight < 3200000 && nHeight > 1600000) {
+            return 72 * COIN; // 5% of current phase total emission
+        } else if (nHeight < 6400000 && nHeight > 3200000){
+            return 36 * COIN;  // 5% of phase total
+        } else if (nHeight < 12800000 && nHeight > 6400000){
+            return 18 * COIN;  // 5% of phase total
+        } else if (nHeight < 25600000 && nHeight > 12800000){
+            return 72 * COIN;  // 5% of phase total
         }
     } else
         return 0;
@@ -2816,7 +2832,7 @@ bool DisconnectBlock(CBlock& block, CValidationState& state, CBlockIndex* pindex
         const CTransaction& tx = block.vtx[i];
 
         /** UNDO ZEROCOIN DATABASING
-         * note we only undo zerocoin databasing in the following statement, value to and from Posq
+         * note we only undo zerocoin databasing in the following statement, value to and from POSQ
          * addresses should still be handled by the typical bitcoin based undo code
          * */
         if (tx.ContainsZerocoins()) {
@@ -3208,7 +3224,7 @@ bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockIndex* pin
                 if (zerocoinDB->ReadCoinSpend(spend.getCoinSerialNumber(), hashTxFromDB)) {
                     if (IsSerialInBlockchain(spend.getCoinSerialNumber(), nHeightTxSpend)) {
                         if (!fVerifyingBlocks || (fVerifyingBlocks && pindex->nHeight > nHeightTxSpend))
-                            return state.DoS(100, error("%s : zPosq with serial %s is already in the block %d\n",
+                            return state.DoS(100, error("%s : zPOSQ with serial %s is already in the block %d\n",
                                                       __func__, spend.getCoinSerialNumber().GetHex(), nHeightTxSpend));
                     }
                 }
@@ -3301,7 +3317,7 @@ bool ConnectBlock(const CBlock& block, CValidationState& state, CBlockIndex* pin
     pindex->nMoneySupply = nMoneySupplyPrev + nValueOut - nValueIn;
     pindex->nMint = pindex->nMoneySupply - nMoneySupplyPrev + nFees;
 
-    //    LogPrintf("XX69----------> ConnectBlock(): nValueOut: %s, nValueIn: %s, nFees: %s, nMint: %s zPosqSpent: %s\n",
+    //    LogPrintf("XX69----------> ConnectBlock(): nValueOut: %s, nValueIn: %s, nFees: %s, nMint: %s zPOSQSpent: %s\n",
     //              FormatMoney(nValueOut), FormatMoney(nValueIn),
     //              FormatMoney(nFees), FormatMoney(pindex->nMint), FormatMoney(nAmountZerocoinSpent));
 
@@ -4289,7 +4305,7 @@ bool CheckBlock(const CBlock& block, CValidationState& state, bool fCheckPOW, bo
                     REJECT_INVALID, "block-version");
         }
 
-        // Posq
+        // POSQ
         // It is entierly possible that we don't have enough data and this could fail
         // (i.e. the block could indeed be valid). Store the block for later consideration
         // but issue an initial reject message.
@@ -4314,13 +4330,13 @@ bool CheckBlock(const CBlock& block, CValidationState& state, bool fCheckPOW, bo
         if (!CheckTransaction(tx, fZerocoinActive, chainActive.Height() + 1 >= Params().Zerocoin_StartHeight(), state))
             return error("CheckBlock() : CheckTransaction failed");
 
-        // double check that there are no double spent zPosq spends in this block
+        // double check that there are no double spent zPOSQ spends in this block
         if (tx.IsZerocoinSpend()) {
             for (const CTxIn txIn : tx.vin) {
                 if (txIn.scriptSig.IsZerocoinSpend()) {
                     libzerocoin::CoinSpend spend = TxInToZerocoinSpend(txIn);
                     if (count(vBlockSerials.begin(), vBlockSerials.end(), spend.getCoinSerialNumber()))
-                        return state.DoS(100, error("%s : Double spending of zPosq serial %s in block\n Block: %s",
+                        return state.DoS(100, error("%s : Double spending of zPOSQ serial %s in block\n Block: %s",
                                                   __func__, spend.getCoinSerialNumber().GetHex(), block.ToString()));
                     vBlockSerials.emplace_back(spend.getCoinSerialNumber());
                 }
@@ -4637,7 +4653,7 @@ bool ProcessNewBlock(CValidationState& state, CNode* pfrom, CBlock* pblock, CDis
         }
     }
     if (nMints || nSpends)
-        LogPrintf("%s : block contains %d zPosq mints and %d zPosq spends\n", __func__, nMints, nSpends);
+        LogPrintf("%s : block contains %d zPOSQ mints and %d zPOSQ spends\n", __func__, nMints, nSpends);
 
     // ppcoin: check proof-of-stake
     // Limited duplicity on stake: prevents block flood attack
@@ -5759,7 +5775,7 @@ bool static ProcessMessage(CNode* pfrom, string strCommand, CDataStream& vRecv, 
             return false;
         }
 
-        // Posq: We use certain sporks during IBD, so check to see if they are
+        // POSQ: We use certain sporks during IBD, so check to see if they are
         // available. If not, ask the first peer connected for them.
         if (!pSporkDB->SporkExists(SPORK_14_NEW_PROTOCOL_ENFORCEMENT) &&
             !pSporkDB->SporkExists(SPORK_15_NEW_PROTOCOL_ENFORCEMENT_2) &&

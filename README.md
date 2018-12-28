@@ -1,7 +1,7 @@
 ### POSQ is a fork of [PIVX](https://github.com/PIVX-Project/PIVX) that forked [Dash](https://github.com/dashpay/dash) that forked [Bitcoin](https://github.com/bitcoin/bitcoinp)
 
 
-# Posq Core integration/staging repository
+# POSQ Core integration/staging repository
 
 
 ### Coin Specs
@@ -12,7 +12,7 @@
 <tr><td>Max Coin Supply </td><td>100,000,000 POSQ</td></tr>
 <tr><td>Premine</td><td>8,000,000 POSQ</td></tr>
 <tr><td>MN Port</td><td>5520</td></tr>
-<tr><td>RPC Port</td><td>15520</td></tr>
+<tr><td>RPC Port</td><td>5521</td></tr>
 </table>
 
 
