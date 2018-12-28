@@ -57,11 +57,11 @@ static void convertSeed6(std::vector<CAddress>& vSeedsOut, const SeedSpec6* data
 static Checkpoints::MapCheckpoints mapCheckpoints =
     boost::assign::map_list_of
 
-    (0, uint256("0xa9f081734c579a25872ce366d5520482755d26ff3db73fbe7bdd4e973bc0e173"));
+    (0, uint256("0x000007f655336c0642afe23368b4caa2ea9ab50277d2f1544457b1b053848e60"));
 
 static const Checkpoints::CCheckpointData data = {
 	&mapCheckpoints,
-	1534438799, // * UNIX timestamp of last checkpoint block
+	1546039896, // * UNIX timestamp of last checkpoint block
 	0,          // * total number of transactions between genesis and last checkpoint
 				//   (the tx=... number in the SetBestChain debug.log lines)
 				2000        // * estimated number of transactions per day after checkpoint, was 2000
@@ -136,7 +136,7 @@ public:
 		nModifierUpdateBlock = 1; //Was 999999999
 		nZerocoinStartHeight = 401;
 		nAccumulatorStartHeight = 1;
-		nZerocoinStartTime = 1534438799;
+		nZerocoinStartTime = 1546039896;
 		nBlockEnforceSerialRange = 1;       //Enforce serial range starting this block
 		nBlockRecalculateAccumulators = ~1; //Trigger a recalculation of accumulators
 		nBlockFirstFraudulent = ~1;         //First block that bad serials emerged
@@ -153,20 +153,20 @@ public:
 		genesis.hashPrevBlock = 0;
 		genesis.hashMerkleRoot = genesis.BuildMerkleTree();
 		genesis.nVersion = 1;
-		genesis.nTime = 1545442921;
+		genesis.nTime = 1546039896;
 		genesis.nBits = 504365040;
-		genesis.nNonce = 191435;
+		genesis.nNonce = 35986;
 
 		nEnforceNewSporkKey = 1546300800; //!> Sporks signed after (GMT): Tuesday, Jan 1, 2018 12:00:00 AM GMT must use the new spork key
-        nRejectOldSporkKey = 1548979200;  //!> Fully reject old spork key after (GMT): Friday, Feb 1, 2018 12:00:00 AM
+        	nRejectOldSporkKey = 1548979200;  //!> Fully reject old spork key after (GMT): Friday, Feb 1, 2018 12:00:00 AM
 
 
 		hashGenesisBlock = genesis.GetHash();
 
-		//printf("genesis.GetHash = %s\n", genesis.GetHash().ToString().c_str());
-		//printf("genesis.hashMerkleRoot = %s\n", genesis.hashMerkleRoot.ToString().c_str());
-		assert(hashGenesisBlock == uint256("0xe6cfdfac2355b12069552ab170cda9cc9d11cb7bdbeec21fc23500c797a65f38"));
-		assert(genesis.hashMerkleRoot == uint256("0x598ffdff99e67551b7a05dc08dfafcf2e7a6ecea89f9b369bf830f4b21ff160f"));
+		printf("genesis.GetHash = %s\n", genesis.GetHash().ToString().c_str());
+		printf("genesis.hashMerkleRoot = %s\n", genesis.hashMerkleRoot.ToString().c_str());
+		assert(hashGenesisBlock == uint256("0x000007f655336c0642afe23368b4caa2ea9ab50277d2f1544457b1b053848e60"));
+		assert(genesis.hashMerkleRoot == uint256("0x017be3d30454b7cad711e27e632acab6ba986fe33c7affe2c4345902e41179a8"));
 
 		//Teams Seeder
 		vSeeds.push_back(CDNSSeedData("seeder.posqoin.club", "seeder.posqoin.club"));
@@ -198,7 +198,7 @@ public:
         strSporkKey = "034eea79b60108d63a9123cab5b708dacdc3ba2cb643466e8543a2e50f271c1ada";
 
 		strObfuscationPoolDummyAddress = "QfKpz2Vrh4XbfJNahntTJSDhSBmCEvUVZ3";
-		nStartMasternodePayments = 1534438799;
+		nStartMasternodePayments = 1546039896;
 
 		/** Zerocoin */
         zerocoinModulus = "c247e97631b8249acb00b7f7f7c9cb57825d2a07c6e20d84c4f3c02a0e2e38b703d24b2204d0363bc2782b1e87e40d90a3"
