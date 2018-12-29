@@ -57,7 +57,7 @@ static void convertSeed6(std::vector<CAddress>& vSeedsOut, const SeedSpec6* data
 static Checkpoints::MapCheckpoints mapCheckpoints =
     boost::assign::map_list_of
 
-    (0, uint256("0x000007f655336c0642afe23368b4caa2ea9ab50277d2f1544457b1b053848e60"));
+    (0, uint256("0x93c27f4044caabd89891f9d3089abf0dbe7323124374f9ff6d469c3f867e41be"));
 
 static const Checkpoints::CCheckpointData data = {
 	&mapCheckpoints,
@@ -165,8 +165,8 @@ public:
 
 		printf("genesis.GetHash = %s\n", genesis.GetHash().ToString().c_str());
 		printf("genesis.hashMerkleRoot = %s\n", genesis.hashMerkleRoot.ToString().c_str());
-		assert(hashGenesisBlock == uint256("0x000007f655336c0642afe23368b4caa2ea9ab50277d2f1544457b1b053848e60"));
-		assert(genesis.hashMerkleRoot == uint256("0x017be3d30454b7cad711e27e632acab6ba986fe33c7affe2c4345902e41179a8"));
+		assert(hashGenesisBlock == uint256("0x93c27f4044caabd89891f9d3089abf0dbe7323124374f9ff6d469c3f867e41be"));
+		assert(genesis.hashMerkleRoot == uint256("0x598ffdff99e67551b7a05dc08dfafcf2e7a6ecea89f9b369bf830f4b21ff160f"));
 
 		//Teams Seeder
 		vSeeds.push_back(CDNSSeedData("seeder.posqoin.club", "seeder.posqoin.club"));
